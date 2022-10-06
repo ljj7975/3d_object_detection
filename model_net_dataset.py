@@ -3,10 +3,13 @@ import open3d as o3d
 from typing import List
 import os
 import random
+
+import pc_augmentation
 from constants import DatasetSplit
 import torch
 import numpy as np
 from utils import vis_utils
+
 
 class ModelNetDataset(Dataset):
     def __init__(
@@ -57,6 +60,8 @@ class ModelNetDataset(Dataset):
         for obj_idx, object in enumerate(self.pos_objects):
             obj_sample_paths = []
             for file_name in os.listdir(os.path.join(self.data_dir, object, split_dir_name)):
+                if "off" not in file_name:
+                    continue
                 obj_sample_paths.append(
                     os.path.join(self.data_dir, object, split_dir_name, file_name)
                 )
@@ -71,6 +76,8 @@ class ModelNetDataset(Dataset):
         for object in self.neg_objects:
             neg_obj_sample_paths = []
             for file_name in os.listdir(os.path.join(self.data_dir, object, split_dir_name)):
+                if "off" not in file_name:
+                    continue
                 neg_obj_sample_paths.append(
                     os.path.join(self.data_dir, object, split_dir_name, file_name)
                 )
@@ -98,7 +105,10 @@ class ModelNetDataset(Dataset):
     def _load_pc(self, file_name):
         if file_name not in self.cache:
             o3d_mesh = o3d.io.read_triangle_mesh(file_name)
-            self.cache[file_name] = np.asarray(o3d_mesh.vertices)
+            # vertices
+            # self.cache[file_name] = np.asarray(o3d_mesh.vertices)
+            # random points
+            self.cache[file_name] = np.asarray(o3d_mesh.sample_points_uniformly(1024).points)
         return self.cache[file_name]
 
     def visualize_sample(self, idx):
@@ -112,5 +122,14 @@ class ModelNetDataset(Dataset):
 
     def __getitem__(self, idx):
         """loads and returns a sample from the dataset at the given index"""
-        np_pc = self._load_pc(self.sample_paths[idx])
-        return torch.Tensor(np_pc), self.labels[idx]
+        pc = torch.Tensor(self._load_pc(self.sample_paths[idx]))
+        num_points = 1024
+        try:
+            pc = pc_augmentation.sample_uniform(pc, num_points)
+            pc = pc_augmentation.normalize(pc)
+            pc = pc_augmentation.pad_zeros(pc, num_points)
+            pc = pc_augmentation.rotate_randomly(pc)
+            pc = pc_augmentation.add_gaussian_noise(pc)
+        except Exception as e:
+            raise RuntimeError(f"Failed to process sample {self.sample_paths[idx]}: {e}")
+        return pc, self.labels[idx]
