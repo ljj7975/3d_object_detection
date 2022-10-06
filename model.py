@@ -7,6 +7,7 @@ from torch.autograd import Variable
 import numpy as np
 import torch.nn.functional as F
 
+# pointnet implementation taken from https://github.com/fxia22/pointnet.pytorch
 
 class STN3d(nn.Module):
     def __init__(self):

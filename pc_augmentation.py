@@ -46,4 +46,4 @@ def rotate_randomly(pc:torch.Tensor):
     return torch.matmul(pc, torch.Tensor(random_rotation))
 
 def add_gaussian_noise(pc:torch.Tensor):
-    return pc + 0.05 * torch.randn(pc.shape)
+    return pc + 0.02 * torch.randn(pc.shape)
