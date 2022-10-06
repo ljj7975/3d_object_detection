@@ -28,7 +28,9 @@ pip install -e packages.txt
 `python train.py` will start the training and save the trained model under `runs/<date_time>` along with tensorboard logs. 
 
 ### Evaluation
-`python evaluate.py --model-path <location of the .pth file>` will run the evaluation using the trained model
+`python evaluate.py --model-path <location of the .pth file>` will run the evaluation using the trained model.
+
+`python evaluate.py` will run the pre-trained model and report test accuracy.
 
 ### File structure
 ```commandline
@@ -99,9 +101,8 @@ Here are the augmentations I have applied, implementation can be found [here](pc
 
 ### Question 1
 
-With the final model stored under `pretrained/`, 
-I have achieved 75.43% (531/704) on validation set (20% of training set)
-and 72.19% (501/694) on test set
+The final model `pretrained/model_final.pth` reports 79.69% (561/704) on validation set (20% of training set)
+and 74.35% (516/694) on test set. The log can be found [here](training_log.md)
 
 There are number of techniques that I can apply to improve the numbers
 
