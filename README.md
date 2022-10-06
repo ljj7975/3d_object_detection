@@ -20,8 +20,8 @@ unzip ModelNet10.zip
 
 ### Preparation
 ```commandline
-pip install -e packages.txt
 pip install -r requirements.txt
+pip install -e packages.txt
 ```
 
 ### Training
@@ -53,6 +53,16 @@ pip install -r requirements.txt
 └── utils
     └── vis_utils.py
 ```
+
+Please note that, even though I have followed subtasks, the final implementation has diverged slightly.
+
+### Additional packages used
+
+I have used `open3d` for loading `.off` file.
+
+I also used `vtk` for visualization along with a [wrapper](https://github.com/kujason/scene_vis)
+
+The full list can be found in packages.txt and requirements.txt
 
 ## Discussions
 
@@ -108,6 +118,15 @@ In this case, I'd add more negative samples to the training set. I can apply aug
 #### Increasing the number of points
 I am currently using 1024 points as instructed by the assignment.
 However, 1024 points might be too small to distinguish the objects.
+
+#### Early Stopping
+I train the model for a fixed iteration, but I can save the model that reports the highest number with validation set.
+
+#### Hyperparameter tuning
+There are many parameters that can be tuned. I think I could've applied cross validation to search for the optional sets.
+
+#### Ensemble technique
+Since the model achieves accuracy > 0.5, we can train multiple models using different training set and aggregate the results for the final prediction.
 
 ### Question 2
 
