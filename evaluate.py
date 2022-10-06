@@ -5,9 +5,12 @@ from model_net_dataset import ModelNetDataset
 import argparse
 from model_training import evaluate
 from typing import List
+from utils import random_utils
 
 def main(model_path:str, pos_objects:List[str]):
     """Load pretrained model and evaluate on test set"""
+    random_utils.set_random_seed()
+
     num_classes = len(pos_objects) + 1
 
     batch_size = 32

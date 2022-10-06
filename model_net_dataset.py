@@ -122,7 +122,7 @@ class ModelNetDataset(Dataset):
             # random data points are good but vertices can improve identification
             vertices = np.asarray(o3d_mesh.vertices)
             num_vertices = len(vertices)
-            num_selected_vertices = self.num_points // 4
+            num_selected_vertices = self.num_points // 10
             if num_vertices > num_selected_vertices:
                 vertices = vertices[random.sample(range(num_vertices), num_selected_vertices)]
 

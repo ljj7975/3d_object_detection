@@ -9,10 +9,13 @@ import os
 from model_training import train, evaluate
 import argparse
 from typing import List
+from utils import random_utils
 
 def main(pos_objects:List[str]):
     """Train a model that identifies object"""
-    run_dir = os.path.join('runs', datetime.now().strftime('%b_d_%H-%M-%S'))
+    random_utils.set_random_seed()
+
+    run_dir = os.path.join('runs', datetime.now().strftime('%b-%H-%M-%S'))
     writer = SummaryWriter(log_dir=run_dir)
 
     num_classes = len(pos_objects) + 1
@@ -60,7 +63,7 @@ def main(pos_objects:List[str]):
     model = PointNetCls(k=num_classes)
     model.cuda()
     optimizer = optim.Adam(model.parameters(), lr=0.005, betas=(0.9, 0.999))
-    scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50,90,120,140], gamma=0.5)
+    scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[70,110,130], gamma=0.5)
 
     # Start training
     for epoch in range(1, num_epochs + 1):

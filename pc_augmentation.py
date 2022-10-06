@@ -48,7 +48,7 @@ def rotate_randomly(pc:torch.Tensor):
 
 def translate_randomly(pc:torch.Tensor):
     """Randomly translate the give point cloud"""
-    random_translation = (torch.randn(3) - 0.5) * 0.2
+    random_translation = (torch.randn(3) - 0.5) * 0.02
     return pc + random_translation
 
 def add_gaussian_noise(pc:torch.Tensor):
