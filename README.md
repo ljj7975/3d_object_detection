@@ -21,7 +21,7 @@ unzip ModelNet10.zip
 ### Preparation
 ```commandline
 pip install -r requirements.txt
-pip install -e packages.txt
+pip install -r packages.txt
 ```
 
 ### Training
