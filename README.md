@@ -64,7 +64,7 @@ I have used `open3d` for loading `.off` file.
 
 I also used `vtk` for visualization along with a [wrapper](https://github.com/kujason/scene_vis)
 
-The full list can be found in packages.txt and requirements.txt
+The full list can be found in [packages.txt](packages.txt) and [requirements.txt](requirements.txt)
 
 ## Discussions
 
@@ -109,19 +109,21 @@ There are number of techniques that I can apply to improve the numbers
 #### Better model architecture
 The naive PointNet is fairly old. The recent models performs much better in general
 
-#### Bagging technique
+#### Different weights for each class
 I found that there are fewer samples for desk. 
 I didn't explicitly log accuracy per object but if the accuracy for desk is particularly lower than other ones, I can weight the desk samples during training so the model is trained with balanced dataset.
 
 Additionally, it's possible that false positive rate might be high (detecting negative samples as one of the positive object).
-In this case, I'd add more negative samples to the training set. I can apply augmentations more aggressively on these samples. 
+In this case, I'd add more negative samples to the training set. I can apply augmentations more aggressively on these samples.
+
+Focal loss can possibly used in this case.
 
 #### Increasing the number of points
 I am currently using 1024 points as instructed by the assignment.
 However, 1024 points might be too small to distinguish the objects.
 
 #### Early Stopping
-I train the model for a fixed iteration, but I can save the model that reports the highest number with validation set.
+I train the model for a fixed iteration, but I can save the model that reports the highest number for validation set.
 
 #### Hyperparameter tuning
 There are many parameters that can be tuned. I think I could've applied cross validation to search for the optional sets.
