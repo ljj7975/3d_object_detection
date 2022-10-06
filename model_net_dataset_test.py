@@ -1,7 +1,6 @@
 from model_net_dataset import ModelNetDataset
 from constants import DatasetSplit
 import unittest
-from utils import vis_utils
 
 class ModelNetDatasetTest(unittest.TestCase):
 
