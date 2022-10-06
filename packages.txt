@@ -1,0 +1,2 @@
+# Third-party
+-e lib/scene_vis
