@@ -102,7 +102,7 @@ Here are the augmentations I have applied, implementation can be found [here](pc
 ### Question 1
 
 The final model `pretrained/model_final.pth` reports 79.69% (561/704) on validation set (20% of training set)
-and 74.35% (516/694) on test set. The log can be found [here](training_log.md)
+and 74.35% (516/694) on test set. The training messages can be found [here](training_log.md) and the loss & val accuracy graphs can be visualized by running tensorboard (`tensorboard --logdir runs`).
 
 There are number of techniques that I can apply to improve the numbers
 
