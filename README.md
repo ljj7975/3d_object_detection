@@ -24,6 +24,12 @@ pip install -r requirements.txt
 pip install -r packages.txt
 ```
 
+I have used `open3d` for loading `.off` file.
+
+I also used `vtk` for visualization along with a [wrapper](https://github.com/kujason/scene_vis)
+
+The full list can be found in [packages.txt](packages.txt) and [requirements.txt](requirements.txt)
+
 ### Training
 `python train.py` will start the training and save the trained model under `runs/<date_time>` along with tensorboard logs. 
 
@@ -58,17 +64,8 @@ pip install -r packages.txt
 
 Please note that, even though I have followed subtasks, the final implementation has diverged slightly.
 
-### Additional packages used
 
-I have used `open3d` for loading `.off` file.
-
-I also used `vtk` for visualization along with a [wrapper](https://github.com/kujason/scene_vis)
-
-The full list can be found in [packages.txt](packages.txt) and [requirements.txt](requirements.txt)
-
-## Discussions
-
-### Model selection
+## Model selection
 
 There are many models available for 3d object detection.
 However, PointNet (developed in 2017) is known in the domain as it can efficiently extract meaningful information from 3d data by processing each point independently.
@@ -81,10 +78,17 @@ Since then, PointNet++ has became base feature extractor for many models
 There also exist researchers working on non-PointNet models.
 One notable research is from Samsung AI called FCAF3D which attempts to process 3d data without anchor. 
 
-In this assignment, I simply decide to use PointNet for simplicity.
+In this project, I simply decide to use PointNet for simplicity.
 I have only copied the [model implementation](https://github.com/fxia22/pointnet.pytorch/blob/master/pointnet/model.py).
 All the other components are implemented by myself.
 
+The final model `pretrained/model_final.pth` reports 79.69% (561/704) on validation set (20% of training set)
+and 74.35% (516/694) on test set. The training messages can be found [here](training_log.md) and the loss & val accuracy graphs can be visualized by running tensorboard (`tensorboard --logdir runs`).
+
+
+## Improvements
+
+There are number of techniques that I can apply to improve the performance
 
 ### Data augmentation
 
@@ -98,18 +102,10 @@ Here are the augmentations I have applied, implementation can be found [here](pc
 * gaussian noise for each point
 * mixing vertices with the randomly selected points
 
-
-### Question 1
-
-The final model `pretrained/model_final.pth` reports 79.69% (561/704) on validation set (20% of training set)
-and 74.35% (516/694) on test set. The training messages can be found [here](training_log.md) and the loss & val accuracy graphs can be visualized by running tensorboard (`tensorboard --logdir runs`).
-
-There are number of techniques that I can apply to improve the numbers
-
-#### Better model architecture
+### Better model architecture
 The naive PointNet is fairly old. The recent models performs much better in general
 
-#### Different weights for each class
+### Different weights for each class
 I found that there are fewer samples for desk. 
 I didn't explicitly log accuracy per object but if the accuracy for desk is particularly lower than other ones, I can weight the desk samples during training so the model is trained with balanced dataset.
 
@@ -118,20 +114,23 @@ In this case, I'd add more negative samples to the training set. I can apply aug
 
 Focal loss can possibly used in this case.
 
-#### Increasing the number of points
+### Increasing the number of points
 I am currently using 1024 points as instructed by the assignment.
 However, 1024 points might be too small to distinguish the objects.
 
-#### Early Stopping
+### Early Stopping
 I train the model for a fixed iteration, but I can save the model that reports the highest number for validation set.
 
-#### Hyperparameter tuning
+### Hyperparameter tuning
 There are many parameters that can be tuned. I think I could've applied cross validation to search for the optional sets.
 
-#### Ensemble technique
+### Ensemble technique
 Since the model achieves accuracy > 0.5, we can train multiple models using different training set and aggregate the results for the final prediction.
 
-### Question 2
+
+## Generalizability
+
+There are cases where we are asked to identify some other objects, not present within the 5 categories we have trained our model on. In these cases, we can try the following tricks to decide whether an object belongs to a novel category, outside of the ones in the training data.
 
 Throughout the training, the model learns features that helps identifying the object from 3d data.
 As a result, activations for the same class will be similar while notably different from activations for other classes (especially in the layers at the end).
